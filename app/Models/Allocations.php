@@ -12,7 +12,8 @@ class Allocations extends Model
         "stock_id",
         "user_id",
         "worker_id",
-        "quantity"
+        "quantity",
+        "details"
     ];
 
     public function stock(): BelongsTo{

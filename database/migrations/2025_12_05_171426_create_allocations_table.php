@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('worker_id')->constrained('workers')->onDelete('cascade');
             $table->integer('quantity')->default(0);
+            $table->json('details');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email', 255)->nullable();
             $table->string('phone', 20)->nullable();
             $table->foreignId('worker_type_id')->constrained('worker_types')->onDelete('cascade');
+            $table->foreignId('site_id')->constrained('sites')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

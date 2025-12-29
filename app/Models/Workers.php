@@ -14,6 +14,7 @@ class Workers extends Model
         "last_name",
         "email",
         "phone",
+        "site_id",
         "worker_type_id"
     ];
 
