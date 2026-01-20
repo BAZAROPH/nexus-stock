@@ -12,7 +12,7 @@ class WorkerTypeController extends Controller
     public function index(){
         $workerTypes = WorkerTypes::all();
 
-        return view("layouts.worker_types.index", [
+        return view("layouts.workers.types.index", [
             "workerTypes" => $workerTypes
         ]);
     }
