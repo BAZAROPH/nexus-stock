@@ -9,12 +9,19 @@ use Illuminate\Support\Str;
 class RoleController extends Controller
 {
     //
-    public function index(){
-        //
-        $roles = Roles::all();
+    public function index(Request $request){
+        if($request->has("view") && $request->view == "trash"){
+            $roles = Roles::onlyTrashed()->get();
+        }else{
+            $roles = Roles::all();
+        }
+        
+        $permissions = \App\Models\Permissions::all();
 
         return view("layouts.roles.index", [
-            "roles" => $roles
+            "roles" => $roles,
+            "permissions" => $permissions,
+            "isTrash" => $request->has("view") && $request->view == "trash"
         ]);
     }
 
@@ -22,7 +29,7 @@ class RoleController extends Controller
         $request->validate([
             "label" => "required|string|unique:roles,label",
             "description" => "nullable|string",
-            "permissions" => "required|nullable|array|exists:permissions,id|"
+            "permissions" => "nullable|array|exists:permissions,id"
         ]);
 
         $role = Roles::create([
@@ -31,7 +38,9 @@ class RoleController extends Controller
             "description" => $request->description
         ]);
 
-        $role->permissions()->sync($request->permissions);
+        if($request->has("permissions")){
+             $role->permissions()->sync($request->permissions);
+        }
 
         return redirect()->route("roles.index")->with("success", "Rôle créé avec succès.");
     }
@@ -40,7 +49,7 @@ class RoleController extends Controller
         $request->validate([
             "label" => "required|string|unique:roles,label,".$role->id,
             "description" => "nullable|string",
-            "permissions" => "required|nullable|array|exists:permissions,id|"
+            "permissions" => "nullable|array|exists:permissions,id"
         ]);
 
         $role->update([
@@ -49,7 +58,9 @@ class RoleController extends Controller
             "description" => $request->description
         ]);
 
-        $role->permissions()->sync($request->permissions);
+        if($request->has("permissions")){
+             $role->permissions()->sync($request->permissions);
+        }
 
         return redirect()->route("roles.index")->with("success", "Rôle mis à jour avec succès.");
     }
@@ -57,7 +68,7 @@ class RoleController extends Controller
     public function destroy(Roles $role){
         $role->delete();
 
-        return redirect()->route("roles.index")->with("success", "Rôle supprimé avec succès.");
+        return redirect()->route("roles.index")->with("delete", "Rôle supprimé avec succès.");
     }
 
     public function restore($id){

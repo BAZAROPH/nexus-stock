@@ -9,11 +9,16 @@ use Illuminate\Support\Str;
 class SiteController extends Controller
 {
     //
-    public function index(){
-        $sites = Sites::all();
+    public function index(Request $request){
+        if($request->has("view") && $request->view == "trash"){
+            $sites = Sites::onlyTrashed()->get();
+        }else{
+            $sites = Sites::all();
+        }
 
-        return view("site.index", [
-            "sites" => $sites
+        return view("layouts.sites.index", [
+            "sites" => $sites,
+            "isTrash" => $request->has("view") && $request->view == "trash"
         ]);
     }
 
@@ -50,7 +55,7 @@ class SiteController extends Controller
     public function destroy(Sites $site){
         $site->delete();
 
-        return redirect()->route("sites.index")->with("success", "Site supprimé avec succès.");
+        return redirect()->route("sites.index")->with("delete", "Site supprimé avec succès.");
     }
 
     public function restore($id){

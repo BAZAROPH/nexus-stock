@@ -91,22 +91,32 @@
                             <span class="nav-link-text ms-1">Gestion de stock</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pages/virtual-reality.html">
+                     <li class="nav-item">
+                        <a class="nav-link @if(request()->routeIs('stock_types.index')) active @endif" href="{{route('stock_types.index')}}">
                             <div
                                 class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
                             >
-                                <i class="fa-solid fa-person-walking-luggage text-sm text-dark"></i>
+                                <i class="fa-solid fa-tags text-sm @if(request()->routeIs('stock_types.index')) text-white @else text-dark @endif"></i>
+                            </div>
+                            <span class="nav-link-text ms-1">Catégories de stock</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @if(request()->routeIs('allocations.index')) active @endif" href="{{ route('allocations.index') }}">
+                            <div
+                                class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
+                            >
+                                <i class="fa-solid fa-person-walking-luggage text-sm @if(request()->routeIs('allocations.index')) text-white @else text-dark @endif"></i>
                             </div>
                             <span class="nav-link-text ms-1">Dotations</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../pages/rtl.html">
+                        <a class="nav-link @if(request()->routeIs('workers.index')) active @endif" href="{{route('workers.index')}}">
                             <div
                                 class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
                             >
-                                <i class="fa-solid fa-children text-sm text-dark"></i>
+                                <i class="fa-solid fa-children text-sm @if(request()->routeIs('workers.index')) text-white @else text-dark @endif"></i>
                             </div>
                             <span class="nav-link-text ms-1">Effectif</span>
                         </a>
@@ -119,41 +129,42 @@
                             <div
                                 class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
                             >
-                                <i class="fa-solid fa-person-burst text-sm text-dark"></i>
+                                <i class="fa-solid fa-person-burst text-sm text-dark @if(request()->routeIs('worker_types.index')) text-white @else text-dark @endif"></i>
                             </div>
                             <span class="nav-link-text ms-1">Types d'agent</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../pages/sign-in.html">
+                        <a class="nav-link @if(request()->routeIs('roles.index')) active @endif" href="{{route('roles.index')}}">
                             <div
                                 class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
                             >
-                                <i class="fa-solid fa-train text-sm text-dark"></i>
+                                <i class="fa-solid fa-user-shield text-sm @if(request()->routeIs('roles.index')) text-white @else text-dark @endif"></i>
                             </div>
-                            <span class="nav-link-text ms-1">Sites</span>
+                            <span class="nav-link-text ms-1">Rôles</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../pages/sign-up.html">
+                        <a class="nav-link @if(request()->routeIs('permissions.index')) active @endif" href="{{route('permissions.index')}}">
                             <div
                                 class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
                             >
-                                <i class="fa-solid fa-hat-wizard text-sm text-dark"></i>
-                            </div>
-                            <span class="nav-link-text ms-1">Roles</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pages/sign-up.html">
-                            <div
-                                class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
-                            >
-                                <i class="fa-solid fa-fingerprint text-sm text-dark"></i>
+                                <i class="fa-solid fa-key text-sm @if(request()->routeIs('permissions.index')) text-white @else text-dark @endif"></i>
                             </div>
                             <span class="nav-link-text ms-1">Permissions</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link @if(request()->routeIs('sites.index')) active @endif" href="{{route('sites.index')}}">
+                            <div
+                                class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
+                            >
+                                <i class="fa-solid fa-train text-sm @if(request()->routeIs('sites.index')) text-white @else text-dark @endif"></i>
+                            </div>
+                            <span class="nav-link-text ms-1">Sites</span>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </aside>

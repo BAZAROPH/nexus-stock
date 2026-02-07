@@ -5,16 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class StockType extends Model
 {
     //
+    use SoftDeletes;
+
     protected $fillable = [
         "slug",
-        "name",
+        "label",
         "description"
     ];
 
     public function stocks(): HasMany{
-        return $this->hasMany(Stock::class, "stock_type_id")->withTimestamps()->withTrashed();
+        return $this->hasMany(Stock::class, "stock_type_id");
     }
 }

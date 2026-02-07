@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\Concerns\Has;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller {
     //
@@ -71,5 +72,52 @@ class AuthController extends Controller {
         $user->save();
 
         return redirect()->route('login')->with('success', 'Mot de passe mis à jour avec succès. Veuillez vous reconnecter.');
+    }
+
+    public function forgotPasswordView(){
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetLink(Request $request){
+        $request->validate(['email' => 'required|email']);
+        
+        $status = \Illuminate\Support\Facades\Password::sendResetLink($request->only('email'));
+
+        if ($status === \Illuminate\Support\Facades\Password::RESET_LINK_SENT) {
+            return back()->with(['success' => __($status)]);
+        }
+
+        return back()->withErrors(['email' => __($status)]);
+    }
+
+    public function resetPasswordView($token){
+        return view('auth.reset-password', ['token' => $token]);
+    }
+
+    public function updatePassword(Request $request){
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        $status = \Illuminate\Support\Facades\Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new \Illuminate\Auth\Events\PasswordReset($user));
+            }
+        );
+
+        if ($status === \Illuminate\Support\Facades\Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('success', __($status));
+        }
+
+        return back()->withErrors(['email' => [__($status)]]);
     }
 }

@@ -20,14 +20,19 @@ class WorkerTypeController extends Controller
     public function store(Request $request){
         $request->validate([
             "label" => "required|string|unique:worker_types,label",
-            "description" => "nullable|string"
+            "description" => "nullable|string",
+            "profil" => "nullable|image|max:2048"
         ]);
 
-        WorkerTypes::create([
+        $workerType = WorkerTypes::create([
             "slug" => Str::slug($request->label),
             "label" => $request->label,
             "description" => $request->description
         ]);
+
+        if($request->hasFile("profil")){
+            $workerType->addMediaFromRequest("profil")->toMediaCollection("profil");
+        }
 
         return redirect()->route("worker_types.index")->with("success", "Type de travailleur créé avec succès.");
     }
@@ -35,7 +40,8 @@ class WorkerTypeController extends Controller
     public function update(Request $request, WorkerTypes $workerType){
         $request->validate([
             "label" => "required|string|unique:worker_types,label,".$workerType->id,
-            "description" => "nullable|string"
+            "description" => "nullable|string",
+            "profil" => "nullable|image|max:2048"
         ]);
 
         $workerType->update([
@@ -44,13 +50,18 @@ class WorkerTypeController extends Controller
             "description" => $request->description
         ]);
 
+        if($request->hasFile("profil")){
+            $workerType->clearMediaCollection("profil");
+            $workerType->addMediaFromRequest("profil")->toMediaCollection("profil");
+        }
+
         return redirect()->route("worker_types.index")->with("success", "Type de travailleur mis à jour avec succès.");
     }
 
     public function destroy(WorkerTypes $workerType){
         $workerType->delete();
 
-        return redirect()->route("worker_types.index")->with("success", "Type de travailleur supprimé avec succès.");
+        return redirect()->route("worker_types.index")->with("delete", "Type de travailleur supprimé avec succès.");
     }
 
     public function restore($id){

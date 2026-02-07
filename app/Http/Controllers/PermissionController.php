@@ -9,11 +9,16 @@ use Illuminate\Support\Str;
 class PermissionController extends Controller
 {
     //
-    public function index(){
-        $permissions = Permissions::all();
+    public function index(Request $request){
+        if($request->has("view") && $request->view == "trash"){
+            $permissions = Permissions::onlyTrashed()->get();
+        }else{
+            $permissions = Permissions::all();
+        }
 
         return view("layouts.permissions.index", [
-            "permissions" => $permissions
+            "permissions" => $permissions,
+            "isTrash" => $request->has("view") && $request->view == "trash"
         ]);
     }
 
@@ -50,7 +55,7 @@ class PermissionController extends Controller
     public function destroy(Permissions $permission){
         $permission->delete();
 
-        return redirect()->route("permissions.index")->with("success", "Permission supprimée avec succès.");
+        return redirect()->route("permissions.index")->with("delete", "Permission supprimée avec succès.");
     }
 
     public function restore($id){

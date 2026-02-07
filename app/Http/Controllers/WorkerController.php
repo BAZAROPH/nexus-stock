@@ -8,11 +8,21 @@ use Illuminate\Http\Request;
 class WorkerController extends Controller
 {
     //
-    public function index(){
-        $workers = Workers::all();
+    public function index(Request $request){
+        if($request->has("view") && $request->view == "trash"){
+            $workers = Workers::onlyTrashed()->get();
+        }else{
+            $workers = Workers::all();
+        }
+        
+        $sites = \App\Models\Sites::all();
+        $workerTypes = \App\Models\WorkerTypes::all();
 
         return view("layouts.workers.index", [
-            "workers" => $workers
+            "workers" => $workers,
+            "sites" => $sites,
+            "workerTypes" => $workerTypes,
+            "isTrash" => $request->has("view") && $request->view == "trash"
         ]);
     }
 
@@ -63,7 +73,7 @@ class WorkerController extends Controller
     public function destroy(Workers $worker){
         $worker->delete();
 
-        return redirect()->route("workers.index")->with("success", "Travailleur supprimé avec succès.");
+        return redirect()->route("workers.index")->with("delete", "Travailleur supprimé avec succès.");
     }
 
     public function restore($id){

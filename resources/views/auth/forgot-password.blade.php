@@ -9,7 +9,7 @@
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
-    <title>{{env('APP_NAME')}} - Connexion</title>
+    <title>{{env('APP_NAME')}} - Mot de passe oublié</title>
 </head>
 <body>
 
@@ -20,8 +20,8 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 text-center mx-auto">
-                        <h1 class="text-white mb-2 mt-5">Bienvenue!</h1>
-                        <p class="text-lead text-white">Connectez vous pour accéder à Nexus Stock.</p>
+                        <h1 class="text-white mb-2 mt-5">Mot de passe oublié?</h1>
+                        <p class="text-lead text-white">Entrez votre email pour réinitialiser votre mot de passe.</p>
                     </div>
                 </div>
             </div>
@@ -40,37 +40,29 @@
                     @endif
                     <div class="card z-index-0 pb-4">
                         <div class="card-header text-center pt-4">
-                            <h5>Connexion</h5>
+                            <h5>Réinitialisation</h5>
                         </div>
-                        @error("error")
+                        @error("email")
                             <div class="alert alert-danger mx-4 py-1 text-white" role="alert">
                                 <strong>Erreur!</strong> {{$message}}
                             </div>
                         @enderror
                         <div class="card-body">
-                            <form role="form text-left" method="POST" action="{{ route('login.perform') }}">
+                            <form role="form text-left" method="POST" action="{{ route('password.email') }}">
                                 @csrf
                                 <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon" value="{{old('email')}}">
-                                    @error('email')
-                                        <p class="text-danger text-sm mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div class="mb-3">
-                                    <input type="password" name="password" class="form-control" placeholder="Mot de passe" aria-label="Password" aria-describedby="password-addon">
+                                    <input type="email" name="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon" value="{{old('email')}}" required>
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Se connecter</button>
-                                </div>
-                                <div class="mb-2 position-relative text-center">
-                                    <p class="text-sm font-weight-bold mb-2 text-secondary text-border d-inline z-index-2 bg-white px-3">
-                                        ou
-                                    </p>
-                                </div>
-                                <div class="text-center">
-                                    <a href="{{ route('password.forgot') }}" class="text-info font-weight-bold text-sm">Mot de passe oublié ?</a>
+                                    <button type="submit" class="btn bg-gradient-info w-100 my-4 mb-2">Envoyer le lien</button>
                                 </div>
                             </form>
+                        </div>
+                         <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                            <p class="mb-4 text-sm mx-auto">
+                                Vous vous en souvenez ?
+                                <a href="{{ route('login') }}" class="text-info text-gradient font-weight-bold">Se connecter</a>
+                            </p>
                         </div>
                     </div>
                 </div>

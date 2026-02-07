@@ -18,14 +18,22 @@ Route::get('/login', [AuthController::class, 'loginView'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.perform');
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth', 'first_login')->name('logout');
 
+// Forgot Password
+Route::get('/forgot-password', [AuthController::class, 'forgotPasswordView'])->name('password.forgot');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+
+// Reset Password
+Route::get('/reset-password/{token}', [AuthController::class, 'resetPasswordView'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
+
 // create user management routes
 Route::get('first-login', [AuthController::class, 'firstLoginView'])->name('first.login')->middleware('auth');
 Route::post('first-login', [AuthController::class, 'firstLogin'])->name('first.login.perform')->middleware('auth');
 Route::get("/email/verify/{id}/{hash}", [AuthController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
 
-Route::get('/dashboard', function () {
-    return view('layouts.dashboard');
-})->middleware('auth', "first_login")->name('dashboard');
+use App\Http\Controllers\HomeController;
+
+Route::get('/dashboard', [HomeController::class, 'index'])->middleware('auth', "first_login")->name('dashboard');
 
 // User Management
 Route::get('/users', [UsersController::class, 'index'])->middleware('auth', 'first_login')->name('users.index');
@@ -77,5 +85,18 @@ Route::post('/allocations/{allocation}', [AllocationController::class, 'update']
 Route::delete('/allocations/{allocation}', [AllocationController::class, 'destroy'])->middleware('auth', 'first_login')->name('allocations.destroy');
 Route::post('/allocations/{id}/restore', [AllocationController::class, 'restore'])->middleware('auth', 'first_login')->name('allocations.restore');
 
+// Stock Type Management
+use App\Http\Controllers\StockTypeController;
+Route::get('/stock-types', [StockTypeController::class, 'index'])->middleware('auth', 'first_login')->name('stock_types.index');
+Route::post('/stock-types', [StockTypeController::class, 'store'])->middleware('auth', 'first_login')->name('stock_types.store');
+Route::post('/stock-types/{stockType}', [StockTypeController::class, 'update'])->middleware('auth', 'first_login')->name('stock_types.update');
+Route::delete('/stock-types/{stockType}', [StockTypeController::class, 'destroy'])->middleware('auth', 'first_login')->name('stock_types.destroy');
+Route::post('/stock-types/{id}/restore', [StockTypeController::class, 'restore'])->middleware('auth', 'first_login')->name('stock_types.restore');
+
+// Stock Management
 Route::get('/stocks', [StockController::class, 'index'])->middleware('auth', 'first_login')->name('stocks.index');
+Route::post('/stocks', [StockController::class, 'store'])->middleware('auth', 'first_login')->name('stocks.store');
+Route::post('/stocks/{stock}', [StockController::class, 'update'])->middleware('auth', 'first_login')->name('stocks.update');
+Route::delete('/stocks/{stock}', [StockController::class, 'destroy'])->middleware('auth', 'first_login')->name('stocks.destroy');
+Route::post('/stocks/{id}/restore', [StockController::class, 'restore'])->middleware('auth', 'first_login')->name('stocks.restore');
 
