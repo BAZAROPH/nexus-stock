@@ -30,7 +30,7 @@ class AllocationController extends Controller
 
     public function store(Request $request){
         $request->validate([
-            "stock_id" => "required|exists:stock,id",
+            "stock_id" => "required|exists:stocks,id",
             "user_id" => "required|exists:users,id",
             "worker_id" => "required|exists:workers,id",
             "quantity" => "required|integer|min:1",
@@ -47,6 +47,14 @@ class AllocationController extends Controller
             "observation" => $request->observation
         ];
 
+        $stock = \App\Models\Stock::findOrFail($request->stock_id);
+
+        if($stock->quantity < $request->quantity){
+            return back()->withErrors(['quantity' => 'La quantité demandée est supérieure au stock disponible (' . $stock->quantity . ').']);
+        }
+
+        $stock->decrement('quantity', $request->quantity);
+
         Allocations::create([
             "stock_id" => $request->stock_id,
             "user_id" => $request->user_id,
@@ -60,7 +68,7 @@ class AllocationController extends Controller
 
     public function update(Request $request, Allocations $allocation){
         $request->validate([
-            "stock_id" => "required|exists:stock,id",
+            "stock_id" => "required|exists:stocks,id",
             "user_id" => "required|exists:users,id",
             "worker_id" => "required|exists:workers,id",
             "quantity" => "required|integer|min:1",
@@ -89,9 +97,10 @@ class AllocationController extends Controller
     }
 
     public function destroy(Allocations $allocation){
+        $allocation->stock->increment('quantity', $allocation->quantity);
         $allocation->delete();
 
-        return redirect()->route("allocations.index")->with("success", "Allocation supprimée avec succès.");
+        return redirect()->route("allocations.index")->with("success", "Allocation supprimée et stock restauré avec succès.");
     }
 
     public function restore($id){

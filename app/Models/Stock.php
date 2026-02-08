@@ -17,6 +17,7 @@ class Stock extends Model
         "name",
         "description",
         "quantity",
+        "initial_quantity",
         "characteristics",
         "stock_type_id",
         "creator_id",

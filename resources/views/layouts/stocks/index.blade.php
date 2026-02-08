@@ -149,7 +149,9 @@
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Matériel</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Catégorie</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
-            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantité</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantité Initiale</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantité Actuelle</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
             </tr>
         </thead>
@@ -181,8 +183,16 @@
                         <p class="text-xs font-weight-bold mb-0">{{ $stock->site->name ?? 'Aucun' }}</p>
                     </td>
                     <td class="align-middle text-center">
+                        <span class="text-secondary text-xs font-weight-bold">{{ $stock->initial_quantity }}</span>
+                   </td>
+                    <td class="align-middle text-center">
                          <span class="text-secondary text-xs font-weight-bold">{{ $stock->quantity }}</span>
                     </td>
+                    <td class="align-middle text-center">
+                        <span class="text-secondary text-xs font-weight-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $stock->description }}">
+                            {{ Str::limit($stock->description, 20) }}
+                        </span>
+                   </td>
                     <td class="align-middle text-center">
                         @if(!$isTrash)
                             <a href="javascript:;" title="modifier" class="text-success font-weight-bold text-sm" data-toggle="tooltip" data-original-title="Edit stock" data-bs-toggle="modal" data-bs-target="#update-stock-modal{{ $stock->id }}">

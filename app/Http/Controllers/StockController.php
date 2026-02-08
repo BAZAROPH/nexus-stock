@@ -52,6 +52,7 @@ class StockController extends Controller
             "stock_type_id" => $request->stock_type_id,
             "site_id" => $request->site_id,
             "quantity" => $request->quantity,
+            "initial_quantity" => $request->quantity,
             "description" => $request->description,
             "characteristics" => json_encode(array_filter($characteristics)),
             "creator_id" => auth()->id()

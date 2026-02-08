@@ -45,7 +45,7 @@
 
 {{-- Create modal --}}
 <div class="modal fade" id="create-allocation-modal" tabindex="-1" role="dialog" aria-labelledby="createAllocationModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createAllocationModalTitle">Nouvelle dotation</h5>
@@ -56,64 +56,70 @@
             <form method="POST" action="{{ route('allocations.store') }}">
                 @csrf
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="stock_id" class="col-form-label">Matériel (Stock)</label>
-                        <select name="stock_id" class="form-control" required>
-                            <option value="">Sélectionner un matériel</option>
-                            @foreach($stocks as $stock)
-                                <option value="{{ $stock->id }}">{{ $stock->name }} ({{ $stock->quantity }} disp.)</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="worker_id" class="col-form-label">Bénéficiaire (Agent)</label>
-                        <select name="worker_id" class="form-control" required>
-                            <option value="">Sélectionner un agent</option>
-                            @foreach($workers as $worker)
-                                <option value="{{ $worker->id }}">{{ $worker->first_name }} {{ $worker->last_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="user_id" class="col-form-label">Responsable (Utilisateur)</label>
-                        <select name="user_id" class="form-control" required>
-                            <option value="{{ Auth::id() }}">Moi-même</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quantity" class="col-form-label">Quantité</label>
-                        <input name="quantity" type="number" class="form-control" min="1" value="1" required>
-                    </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="size" class="col-form-label">Taille</label>
-                                <input name="size" type="text" class="form-control" placeholder="Ex: L, XL, 42">
+                                <label for="stock_id" class="col-form-label">Matériel (Stock)</label>
+                                <select name="stock_id" class="form-control" required>
+                                    <option value="">Sélectionner un matériel</option>
+                                    @foreach($stocks as $stock)
+                                        <option value="{{ $stock->id }}" data-characteristics='{{ json_encode($stock->characteristics) }}'>{{ $stock->name }} ({{ $stock->quantity }} disp.)</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>
-                        <div class="col-md-6">
+                            
                             <div class="form-group">
-                                <label for="color" class="col-form-label">Couleur</label>
-                                <input name="color" type="text" class="form-control" placeholder="Ex: Rouge, Bleu">
+                                <label for="worker_id" class="col-form-label">Bénéficiaire (Agent)</label>
+                                <select name="worker_id" class="form-control" required>
+                                    <option value="">Sélectionner un agent</option>
+                                    @foreach($workers as $worker)
+                                        <option value="{{ $worker->id }}">{{ $worker->first_name }} {{ $worker->last_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="user_id" class="col-form-label">Responsable (Utilisateur)</label>
+                                <select name="user_id" class="form-control" required>
+                                    <option value="{{ Auth::id() }}">Moi-même</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="quantity" class="col-form-label">Quantité</label>
+                                <input name="quantity" type="number" class="form-control" min="1" value="1" required>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="dimension" class="col-form-label">Dimension</label>
-                        <input name="dimension" type="text" class="form-control" placeholder="Ex: 15 pouces, 120x60cm">
-                    </div>
 
-                    <div class="form-group">
-                        <label for="observation" class="col-form-label">Observation</label>
-                        <textarea name="observation" class="form-control" placeholder="État du matériel, remarques particulières..."></textarea>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="size" class="col-form-label">Taille</label>
+                                        <input name="size" type="text" class="form-control" placeholder="Ex: L, XL, 42">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="color" class="col-form-label">Couleur</label>
+                                        <input name="color" type="text" class="form-control" placeholder="Ex: Rouge, Bleu">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="dimension" class="col-form-label">Dimension</label>
+                                <input name="dimension" type="text" class="form-control" placeholder="Ex: 15 pouces, 120x60cm">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="observation" class="col-form-label">Observation</label>
+                                <textarea name="observation" class="form-control" rows="4" placeholder="État du matériel, remarques particulières..."></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -132,6 +138,8 @@
             <tr>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Matériel</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Bénéficiaire</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Responsable</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Quantité</th>
             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Détails</th>
             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
@@ -154,6 +162,16 @@
                                 <h6 class="mb-0 text-sm">{{ $allocation->worker->first_name ?? '' }} {{ $allocation->worker->last_name ?? 'Inconnu' }}</h6>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        <div class="d-flex px-2 py-1">
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm">{{ $allocation->user->first_name ?? '' }} {{ $allocation->user->last_name ?? 'Inconnu' }}</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <p class="text-xs font-weight-bold mb-0">{{ $allocation->stock->site->name ?? 'Aucun' }}</p>
                     </td>
                     <td class="align-middle text-center">
                         <span class="text-secondary text-xs font-weight-bold">{{ $allocation->quantity }}</span>
@@ -233,4 +251,53 @@
     </table>
   </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stockSelect = document.querySelector('select[name="stock_id"]');
+        const sizeInput = document.querySelector('input[name="size"]');
+        const colorInput = document.querySelector('input[name="color"]');
+        const dimensionInput = document.querySelector('input[name="dimension"]');
+        const observationTextArea = document.querySelector('textarea[name="observation"]');
+
+        stockSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const dataAttributes = selectedOption.getAttribute('data-characteristics');
+            if(!dataAttributes) return;
+            
+            const characteristics = JSON.parse(dataAttributes);
+
+            if (characteristics) {
+                if (characteristics.size) {
+                    sizeInput.value = characteristics.size;
+                    sizeInput.setAttribute('readonly', true);
+                } else {
+                    sizeInput.value = '';
+                    sizeInput.removeAttribute('readonly');
+                }
+
+                if (characteristics.color) {
+                    colorInput.value = characteristics.color;
+                    colorInput.setAttribute('readonly', true);
+                } else {
+                    colorInput.value = '';
+                    colorInput.removeAttribute('readonly');
+                }
+
+                if (characteristics.dimension) {
+                    dimensionInput.value = characteristics.dimension;
+                    dimensionInput.setAttribute('readonly', true);
+                } else {
+                    dimensionInput.value = '';
+                    dimensionInput.removeAttribute('readonly');
+                }
+                
+                // For observation, we generally keep it editable unless specific requirement
+                // observationTextArea.value = characteristics.observation || '';
+            }
+        });
+    });
+</script>
 @endsection
